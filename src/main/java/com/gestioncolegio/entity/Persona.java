@@ -1,4 +1,5 @@
 package com.gestioncolegio.entity;
+import java.io.Serializable;
 import java.sql.Date;
 
 import jakarta.persistence.GeneratedValue;
@@ -7,8 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class Persona {
+public abstract class Persona implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

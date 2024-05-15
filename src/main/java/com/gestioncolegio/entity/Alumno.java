@@ -11,6 +11,10 @@ import jakarta.persistence.*;
 
 public class Alumno extends Persona {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@ManyToMany
 	@JoinTable(name = "alumno_asignaturas", joinColumns = @JoinColumn(name = "alumno_id"), inverseJoinColumns = @JoinColumn(name = "asignatura_id"))
 

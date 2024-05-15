@@ -1,5 +1,6 @@
 package com.gestioncolegio.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "asignaturas")
-public class Asignatura {
+public class Asignatura implements Serializable {
 	
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -19,8 +25,8 @@ public class Asignatura {
     @ManyToMany(mappedBy = "asignaturasMatriculadas")
     private List<Alumno> alumnos = new ArrayList<Alumno>();
 
-    @ManyToMany(mappedBy = "asignaturas")
-    private List<Profesor> profesores = new ArrayList<Profesor>();
+    @ManyToMany(mappedBy =  "asignaturas")
+    private List<Trabajador> profesores = new ArrayList<Trabajador>();
 
 	public String getNombre() {
 		return nombre;
