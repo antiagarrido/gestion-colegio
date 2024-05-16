@@ -17,7 +17,7 @@ public class Asignatura implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     private String nombre;
     private String curso;
@@ -27,6 +27,16 @@ public class Asignatura implements Serializable {
 
     @ManyToMany(mappedBy =  "asignaturas")
     private List<Trabajador> profesores = new ArrayList<Trabajador>();
+
+   
+    
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -48,6 +58,7 @@ public class Asignatura implements Serializable {
 	public String toString() {
 		return "" + nombre + " de " + curso + "( id " + id + ")";
 	}
+
 
 
 

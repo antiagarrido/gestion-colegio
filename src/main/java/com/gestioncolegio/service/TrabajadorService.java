@@ -7,7 +7,6 @@ import com.gestioncolegio.entity.Asignatura;
 import com.gestioncolegio.entity.Trabajador;
 import com.gestioncolegio.repository.TrabajadorRepository;
 
-
 @Repository
 public class TrabajadorService {
 
@@ -18,7 +17,6 @@ public class TrabajadorService {
 	private AsignaturaService asignaturaService;
 
 	public List<Trabajador> listarTrabajadores() {
-
 		return trabajadorRepository.findAll();
 	}
 
@@ -26,12 +24,10 @@ public class TrabajadorService {
 		return trabajadorRepository.findById(id);
 	}
 
-	public void guardar(Trabajador trabajador) throws RuntimeException {
-
+	public void guardar(Trabajador trabajador) {
 		if (trabajador.getRol().equals("director") && trabajadorRepository.countByRol("director") > 0) {
-
+			
 			throw new RuntimeException("Solo puede haber un director");
-
 		}
 		trabajadorRepository.save(trabajador);
 	}
@@ -40,9 +36,14 @@ public class TrabajadorService {
 		trabajadorRepository.deleteById(id);
 	}
 
-	public List<Trabajador> buscarDirector() {
+	public Trabajador buscarDirector() {
 
-		return trabajadorRepository.findByRol("director");
+		List<Trabajador> directores = trabajadorRepository.findByRol("director");
+		if (!directores.isEmpty()) {
+			return directores.get(0);
+		} else {
+			throw new RuntimeException("No hay director");
+		}
 
 	}
 
@@ -54,10 +55,9 @@ public class TrabajadorService {
 		return trabajadorRepository.findByRol("profesor");
 	}
 
-	public Trabajador agregarAsignatura(int trabajador_id, int asignatura_id) {
-
-		Trabajador trabajador = trabajadorRepository.findById(trabajador_id);
-		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignatura_id);
+	public Trabajador agregarAsignatura(int trabajadorId, int asignaturaId) {
+		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
+		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignaturaId);
 
 		if (!trabajador.getRol().equals("profesor")) {
 			throw new RuntimeException("Este trabajador no es profesor");
@@ -65,18 +65,18 @@ public class TrabajadorService {
 
 		trabajador.getAsignaturas().add(asignatura);
 		return trabajadorRepository.save(trabajador);
-
 	}
-	public Trabajador eliminarAsignatura(int trabajador_id, int asignatura_id) {
-		
-		Trabajador trabajador = trabajadorRepository.findById(trabajador_id);
-		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignatura_id);
-		
+
+	public Trabajador eliminarAsignatura(int trabajadorId, int asignaturaId) {
+		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
+		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignaturaId);
+
 		trabajador.getAsignaturas().remove(asignatura);
 		return trabajadorRepository.save(trabajador);
-		
 	}
-	
-	
 
+	public List<Asignatura> consultarAsignaturas(int trabajadorId) {
+		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
+		return trabajador.getAsignaturas();
+	}
 }

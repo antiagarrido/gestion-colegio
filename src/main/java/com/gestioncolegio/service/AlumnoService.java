@@ -36,9 +36,15 @@ public class AlumnoService {
 	public void eliminar(int id) {
 		alumnoRepository.deleteById(id);
 	}
+	
+	public List<Asignatura> consultarAsignaturas(int alumno_id) {
+		Alumno alumno = buscarAlumnoId(alumno_id);
+		
+		return alumno.getAsignaturasMatriculadas();
+	}
 
 	public Alumno matricularAsignatura(int alumno_id, int asignatura_id) {
-		Alumno alumno = alumnoRepository.findById(alumno_id);
+		Alumno alumno = buscarAlumnoId(alumno_id);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignatura_id);
 
 		alumno.getAsignaturasMatriculadas().add(asignatura);
@@ -47,11 +53,13 @@ public class AlumnoService {
 
 	public Alumno desmatricularAsignatura(int alumno_id, int asignatura_id) {
 		
-		Alumno alumno = alumnoRepository.findById(alumno_id);
+		Alumno alumno =buscarAlumnoId(alumno_id);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignatura_id);
 
 		alumno.getAsignaturasMatriculadas().remove(asignatura);
 		return alumnoRepository.save(alumno);
 	}
+
+
 
 }

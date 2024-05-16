@@ -2,7 +2,10 @@ package com.gestioncolegio.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.gestioncolegio.entity.Asignatura;
 import com.gestioncolegio.entity.Trabajador;
 import com.gestioncolegio.service.TrabajadorService;
 
@@ -14,81 +17,137 @@ public class TrabajadorController {
 	private TrabajadorService trabajadorService;
 
 	@GetMapping("/test")
-	public String prueba() {
-		return "Funciona";
+	public ResponseEntity<String> prueba() {
+		return ResponseEntity.ok("Funciona");
 	}
 
-	@GetMapping()
-	public String obtenerTrabajadores() {
+	@GetMapping
+	public ResponseEntity<List<Trabajador>> obtenerTrabajadores() {
+
 		try {
-			
 			List<Trabajador> trabajadores = trabajadorService.listarTrabajadores();
-			return "buscando todos los trabajadores: \n" + trabajadores;
+
+			return ResponseEntity.ok(trabajadores);
+
 		} catch (Exception e) {
-			return "Error " + e.getMessage();
+			return ResponseEntity.status(500).body(null);
 		}
 	}
-		
 
 	@GetMapping("/director")
-	public String  obtenerDirector() {
-		
-		return "El director es  "  + trabajadorService.buscarDirector();
+	public ResponseEntity<String> obtenerDirector() {
+		try {
+			Trabajador director = trabajadorService.buscarDirector();
+
+			return ResponseEntity.ok("El director es " + director);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Error " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/bedeles")
+	public ResponseEntity<List<Trabajador>> obtenerBedeles() {
+		try {
+			List<Trabajador> bedeles = trabajadorService.buscarBedeles();
+
+			return ResponseEntity.ok(bedeles);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(null);
+		}
 
 	}
-	
-	@GetMapping("/bedeles")
-	public String obtenerBedeles() {
-		return "Los bedeles son" + trabajadorService.buscarBedeles();
-	}
-	
+
 	@GetMapping("/profesores")
-	public String obtenerProfesores() {
-		return "Los profesores son" + trabajadorService.buscarProfesores();
+	public ResponseEntity<List<Trabajador>> obtenerProfesores() {
+		try {
+			List<Trabajador> profesores = trabajadorService.buscarProfesores();
+
+			return ResponseEntity.ok(profesores);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(null);
+		}
 	}
-	
 
 	@GetMapping("/{id}")
-	public String getTrabajador(@PathVariable int id) {
-
+	public ResponseEntity<Trabajador> getTrabajador(@PathVariable int id) {
 		try {
-			Trabajador alumno = trabajadorService.buscarTrabajadorId(id);
-			return "" + alumno;
+			Trabajador trabajador = trabajadorService.buscarTrabajadorId(id);
+
+			return ResponseEntity.ok(trabajador);
 		} catch (Exception e) {
-			return "No hemos podido encontrar el trabajador" + e.getMessage();
+			return ResponseEntity.status(404).body(null);
 		}
 	}
 
-	@PutMapping("/nuevo")
-	public String nuevoTrabajador(@RequestBody Trabajador trabajador) {
-		try {
-			trabajadorService.guardar(trabajador);
-			return "Nuevo trabajador: " + trabajador;
-
-		} catch (Exception e) {
-			return "No se ha podido añadir el trabajador" + e.getMessage();
-		}
-	}
-
-	@PutMapping("/actualizar")
-	public String actualizarTrabajador(@RequestBody Trabajador trabajador) {
+	@PostMapping
+	public ResponseEntity<Trabajador> nuevoTrabajador(@RequestBody Trabajador trabajador) {
 		try {
 			trabajadorService.guardar(trabajador);
-			return "Trabajador actualizado: " + trabajador;
 
+			return ResponseEntity.ok(trabajador);
 		} catch (Exception e) {
-			return "No se ha podido añadir el trabajador" + e.getMessage();
+			return ResponseEntity.status(400).body(null);
 		}
 	}
 
-	@DeleteMapping("/eliminar/{id}")
-	public String eliminarTrabajador(@PathVariable int id) {
+	@PutMapping("/{id}")
+	public ResponseEntity<Trabajador> actualizarTrabajador(@PathVariable int id, @RequestBody Trabajador trabajador) {
+		try {
+			trabajador.setId(id);
+			trabajadorService.guardar(trabajador);
+
+			return ResponseEntity.ok(trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(400).body(null);
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> eliminarTrabajador(@PathVariable int id) {
 		try {
 			trabajadorService.eliminar(id);
-			return "Trabajador eliminado";
+
+			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
-			return "no se ha podido eliminar" + e.getMessage();
+			return ResponseEntity.status(404).build();
 		}
 	}
 
+	@PostMapping("/{trabajadorId}/asignaturas/{asignaturaId}")
+	public ResponseEntity<Trabajador> agregarAsignatura(@PathVariable int trabajadorId,
+			@PathVariable int asignaturaId) {
+		try {
+			Trabajador trabajador = trabajadorService.agregarAsignatura(trabajadorId, asignaturaId);
+
+			return ResponseEntity.ok(trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(400).body(null);
+		}
+	}
+
+	@DeleteMapping("/{trabajadorId}/asignaturas/{asignaturaId}")
+	public ResponseEntity<Trabajador> eliminarAsignatura(@PathVariable int trabajadorId,
+			@PathVariable int asignaturaId) {
+		try {
+			Trabajador trabajador = trabajadorService.eliminarAsignatura(trabajadorId, asignaturaId);
+
+			return ResponseEntity.ok(trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(400).body(null);
+		}
+	}
+
+	@GetMapping("/{trabajadorId}/asignaturas")
+	public ResponseEntity<List<Asignatura>> consultarAsignaturas(@PathVariable int trabajadorId) {
+		try {
+			List<Asignatura> asignaturas = trabajadorService.consultarAsignaturas(trabajadorId);
+
+			return ResponseEntity.ok(asignaturas);
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body(null);
+		}
+	}
 }
