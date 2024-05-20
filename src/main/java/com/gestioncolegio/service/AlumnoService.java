@@ -25,12 +25,12 @@ public class AlumnoService {
 
 	}
 
-	public Alumno buscarAlumnoNombre(String nombre) {
+	public List<Alumno> buscarAlumnoNombre(String nombre) {
 		return alumnoRepository.findByNombre(nombre);
 	}
 
-	public void guardar(Alumno alumno) {
-		alumnoRepository.save(alumno);
+	public Alumno guardar(Alumno alumno) {
+		return alumnoRepository.save(alumno);
 	}
 
 	public void eliminar(int id) {
@@ -38,18 +38,24 @@ public class AlumnoService {
 	}
 	
 	public List<Asignatura> consultarAsignaturas(int alumno_id) {
+		
 		Alumno alumno = buscarAlumnoId(alumno_id);
 		
 		return alumno.getAsignaturasMatriculadas();
 	}
+	
+	
 
 	public Alumno matricularAsignatura(int alumno_id, int asignatura_id) {
+		
 		Alumno alumno = buscarAlumnoId(alumno_id);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignatura_id);
 
 		alumno.getAsignaturasMatriculadas().add(asignatura);
 		return alumnoRepository.save(alumno);
 	}
+	
+	
 
 	public Alumno desmatricularAsignatura(int alumno_id, int asignatura_id) {
 		

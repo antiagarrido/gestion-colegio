@@ -13,19 +13,23 @@ public class AsignaturaService {
 	private AsignaturaRepository asignaturaRepository;
 
 	public List<Asignatura> listarAsignaturas() {
-		return asignaturaRepository.findAll();
+		
+		List<Asignatura> asignaturas = asignaturaRepository.findAll();
+		
+		return asignaturas;
 	}
 
 	public Asignatura buscarAsignaturaId(int id) {
-		return asignaturaRepository.findById(id);
+		Asignatura asignatura = asignaturaRepository.findById(id);
+		return asignatura;
 	}
 
-	public Asignatura buscarAsignaturaNombre(String nombre) {
+	public List<Asignatura>  buscarAsignaturaNombre(String nombre) {
 		return asignaturaRepository.findByNombre(nombre);
 	}
 
-	public void guardar(Asignatura asignatura) {
-		asignaturaRepository.save(asignatura);
+	public Asignatura guardar(Asignatura asignatura) {
+		return asignaturaRepository.save(asignatura);
 	}
 
 	public void eliminar(int id) {

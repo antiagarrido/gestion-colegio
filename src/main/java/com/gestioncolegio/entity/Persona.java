@@ -119,12 +119,6 @@ public abstract class Persona implements Serializable{
 		this.telefono = telefono;
 	}
 
-	@Override
-	public String toString() {
-		return " Nombre= " + nombre + "\n Apellidos= " + apellidos + "\n Fecha de nacimiento= " + fechaNacimiento + "\n email= "
-				+ email + "\n Direccion= " + direccion + "\n Teléfono= " + telefono + "\n DNI= " + dni +"\n";
-	}
-
 	public int getId() {
 		return id;
 	}

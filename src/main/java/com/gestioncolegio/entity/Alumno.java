@@ -37,12 +37,6 @@ public class Alumno extends Persona {
 		super();
 	}
 
-	@Override
-	public String toString() {
-
-		return "\n Alumno " + this.getId() + " : \n" + super.toString();
-	}
-
 	public List<Asignatura> getAsignaturasMatriculadas() {
 		return asignaturasMatriculadas;
 	}

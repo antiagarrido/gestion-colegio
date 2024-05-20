@@ -1,8 +1,11 @@
 package com.gestioncolegio.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.gestioncolegio.entity.Alumno;
 import com.gestioncolegio.entity.Asignatura;
@@ -17,115 +20,128 @@ public class AlumnoController {
 
 	@GetMapping("/test")
 	public ResponseEntity<String> prueba() {
-		
+
 		return ResponseEntity.ok("Funciona");
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Alumno>> obtenerAlumnos() {
+	public ResponseEntity<?> getAlumnos() {
 		try {
 			List<Alumno> alumnos = alumnoService.listarAlumnos();
-			
+
 			return ResponseEntity.ok(alumnos);
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los alumnos." +  e.getMessage());
 		}
 	}
+	
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Alumno> getAlumno(@PathVariable int id) {
+	public ResponseEntity<?> getAlumno(@PathVariable int id) {
 		try {
 			Alumno alumno = alumnoService.buscarAlumnoId(id);
-			
+
 			return ResponseEntity.ok(alumno);
+			
 		} catch (Exception e) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el alumno." +  e.getMessage());
 		}
 	}
 
 	@GetMapping("/nombre/{nombre}")
-	public ResponseEntity<Alumno> getAlumnoPorNombre(@PathVariable String nombre) {
+	public ResponseEntity<?> getAlumnoPorNombre(@PathVariable String nombre) {
 		try {
-			Alumno alumno = alumnoService.buscarAlumnoNombre(nombre);
-			
-			return ResponseEntity.ok(alumno);
-			
+			List<Alumno> alumnos = alumnoService.buscarAlumnoNombre(nombre);
+
+			return ResponseEntity.ok(alumnos);
+
 		} catch (Exception e) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el alumno." +  e.getMessage());
 		}
 	}
 
 	@PostMapping
-	public ResponseEntity<Alumno> nuevoAlumno(@RequestBody Alumno alumno) {
+	public ResponseEntity<?> createAlumno(@RequestBody Alumno alumno) {
 		try {
-			alumnoService.guardar(alumno);
 			
-			return ResponseEntity.ok(alumno);
+			Alumno alumnoNuevo = alumnoService.guardar(alumno);
+
+			return ResponseEntity.ok(alumnoNuevo);
+			
 		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el alumno." +  e.getMessage());
 		}
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Alumno> actualizarAlumno(@PathVariable int id, @RequestBody Alumno alumno) {
+	@PutMapping                                                                                
+	public ResponseEntity<?> updateAlumno( @RequestBody Alumno alumno) {
 		try {
-			alumno.setId(id);
-			alumnoService.guardar(alumno);
 			
-			return ResponseEntity.ok(alumno);
+			Alumno alumnoActualizado = alumnoService.guardar(alumno);
+
+			return ResponseEntity.ok(alumnoActualizado);
+			
 		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el alumno." +  e.getMessage());
 		}
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> eliminarAlumno(@PathVariable int id) {
+	public ResponseEntity<String> deleteAlumno(@PathVariable int id) {
 
 		try {
 			alumnoService.eliminar(id);
+
+			return ResponseEntity.ok("Alumno " + id + " eliminado correctamente");
 			
-			return ResponseEntity.ok(null);
 		} catch (Exception e) {
-			return ResponseEntity.status(404).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se ha podido elimanr el alumno");
 		}
 	}
 
-	@PostMapping("/{alumnoId}/asignaturas/{asignaturaId}")
-	public ResponseEntity<Alumno> matricularAsignatura(@PathVariable int alumnoId, @PathVariable int asignaturaId) {
-
-		try {
-			Alumno alumno = alumnoService.matricularAsignatura(alumnoId, asignaturaId);
-			
-			return ResponseEntity.ok(alumno);
-
-		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
-		}
-	}
-
-	@DeleteMapping("/{alumnoId}/asignaturas/{asignaturaId}")
-	public ResponseEntity<Alumno> desmatricularAsignatura(@PathVariable int alumnoId, @PathVariable int asignaturaId) {
-
-		try {
-			Alumno alumno = alumnoService.desmatricularAsignatura(alumnoId, asignaturaId);
-			
-			return ResponseEntity.ok(alumno);
-
-		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
-		}
-	}
+	// Asignaturas
 
 	@GetMapping("/{alumnoId}/asignaturas")
-	public ResponseEntity<List<Asignatura>> consultarAsignaturas(@PathVariable int alumnoId) {
+	public ResponseEntity<?> consultarAsignaturas(@PathVariable int alumnoId) {
 
 		try {
 			List<Asignatura> asignaturas = alumnoService.consultarAsignaturas(alumnoId);
-			
+
 			return ResponseEntity.ok(asignaturas);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las asignaturas el alumno." +  e.getMessage());
 		}
 	}
+
+	@PostMapping("/asignaturas")
+	public ResponseEntity<?> matricularAsignatura(@RequestBody Map <String, Integer> mapaAlumAsig) {
+
+		try {
+			int alumno_id = mapaAlumAsig.get("alumno_id");
+			int asignatura_id = mapaAlumAsig.get("asignatura_id");
+			Alumno alumno = alumnoService.matricularAsignatura(alumno_id, asignatura_id);
+
+			return ResponseEntity.ok(alumno);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al matricular el alummno en la asignatura" +  e.getMessage());
+		}
+	}
+
+	@DeleteMapping("/asignaturas")
+	public ResponseEntity<?> desmatricularAsignatura(@RequestBody Map <String, Integer> mapaAlumAsig) {
+
+		try {
+			int alumno_id = mapaAlumAsig.get("alumno_id");
+			int asignatura_id = mapaAlumAsig.get("asignatura_id");
+			Alumno alumno = alumnoService.desmatricularAsignatura(alumno_id, asignatura_id);
+
+			return ResponseEntity.ok(alumno);
+
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al desmatricular el alummno de la asignatura" +  e.getMessage());
+		}
+	}
+
 }

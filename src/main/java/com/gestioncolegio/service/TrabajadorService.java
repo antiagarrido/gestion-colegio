@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.gestioncolegio.entity.Asignatura;
+import com.gestioncolegio.entity.Rol;
 import com.gestioncolegio.entity.Trabajador;
 import com.gestioncolegio.repository.TrabajadorRepository;
 
@@ -15,6 +16,13 @@ public class TrabajadorService {
 
 	@Autowired
 	private AsignaturaService asignaturaService;
+	
+	@Autowired
+	private RolService rolService;
+	
+
+	
+	
 
 	public List<Trabajador> listarTrabajadores() {
 		return trabajadorRepository.findAll();
@@ -24,12 +32,14 @@ public class TrabajadorService {
 		return trabajadorRepository.findById(id);
 	}
 
-	public void guardar(Trabajador trabajador) {
-		if (trabajador.getRol().equals("director") && trabajadorRepository.countByRol("director") > 0) {
+	public Trabajador guardar(Trabajador trabajador) throws Exception {
+		
+		Rol director = rolService.buscarRolNombre("director");
+		if (trabajador.getRol().equals(director) && trabajadorRepository.countByRol(director) > 0) {
 			
-			throw new RuntimeException("Solo puede haber un director");
+			throw new Exception("Solo puede haber un director");
 		}
-		trabajadorRepository.save(trabajador);
+		return trabajadorRepository.save(trabajador);
 	}
 
 	public void eliminar(int id) {
@@ -37,30 +47,35 @@ public class TrabajadorService {
 	}
 
 	public Trabajador buscarDirector() {
+		
 
-		List<Trabajador> directores = trabajadorRepository.findByRol("director");
-		if (!directores.isEmpty()) {
-			return directores.get(0);
-		} else {
-			throw new RuntimeException("No hay director");
-		}
+		List<Trabajador> directores = trabajadorRepository.findByRol(rolService.buscarRolNombre("director"));
 
+		return directores.get(0);
+		
 	}
 
 	public List<Trabajador> buscarBedeles() {
-		return trabajadorRepository.findByRol("bedel");
+		Rol bedel = rolService.buscarRolNombre("bedel");
+		
+		return trabajadorRepository.findByRol(bedel);
 	}
 
 	public List<Trabajador> buscarProfesores() {
-		return trabajadorRepository.findByRol("profesor");
+	
+		
+		Rol profesor = rolService.buscarRolNombre("profesor");
+		return trabajadorRepository.findByRol(profesor);
 	}
 
-	public Trabajador agregarAsignatura(int trabajadorId, int asignaturaId) {
+	public Trabajador agregarAsignatura(int trabajadorId, int asignaturaId) throws Exception {
+		
 		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignaturaId);
 
-		if (!trabajador.getRol().equals("profesor")) {
-			throw new RuntimeException("Este trabajador no es profesor");
+		if (!trabajador.getRol().getNombre().equals("profesor")) {
+			
+			throw new Exception("Este trabajador no es profesor");
 		}
 
 		trabajador.getAsignaturas().add(asignatura);
@@ -68,6 +83,7 @@ public class TrabajadorService {
 	}
 
 	public Trabajador eliminarAsignatura(int trabajadorId, int asignaturaId) {
+	
 		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignaturaId);
 
@@ -76,7 +92,9 @@ public class TrabajadorService {
 	}
 
 	public List<Asignatura> consultarAsignaturas(int trabajadorId) {
+		
 		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
+		
 		return trabajador.getAsignaturas();
 	}
 }

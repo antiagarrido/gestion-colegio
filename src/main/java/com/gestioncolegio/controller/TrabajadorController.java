@@ -1,7 +1,10 @@
 package com.gestioncolegio.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,132 +25,142 @@ public class TrabajadorController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Trabajador>> obtenerTrabajadores() {
+	public ResponseEntity<?> getTrabajadores() {
 
 		try {
 			List<Trabajador> trabajadores = trabajadorService.listarTrabajadores();
-
 			return ResponseEntity.ok(trabajadores);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener trabajadores." +  e.getMessage());
+		}
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getTrabajador(@PathVariable int id) {
+		try {
+			Trabajador trabajador = trabajadorService.buscarTrabajadorId(id);
+
+			return ResponseEntity.ok( trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el trabajador. " +  e.getMessage());
 		}
 	}
 
 	@GetMapping("/director")
-	public ResponseEntity<String> obtenerDirector() {
+	public ResponseEntity<?> getDirector() {
 		try {
 			Trabajador director = trabajadorService.buscarDirector();
 
-			return ResponseEntity.ok("El director es " + director);
+			return ResponseEntity.ok(director);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body("Error " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error " + e.getMessage());
 		}
 	}
 
 	@GetMapping("/bedeles")
-	public ResponseEntity<List<Trabajador>> obtenerBedeles() {
+	public ResponseEntity<?> getBedeles() {
 		try {
 			List<Trabajador> bedeles = trabajadorService.buscarBedeles();
 
 			return ResponseEntity.ok(bedeles);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener bedeles." +  e.getMessage());
 		}
 
 	}
 
 	@GetMapping("/profesores")
-	public ResponseEntity<List<Trabajador>> obtenerProfesores() {
+	public ResponseEntity<?> getProfesores() {
 		try {
 			List<Trabajador> profesores = trabajadorService.buscarProfesores();
 
 			return ResponseEntity.ok(profesores);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(500).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener profesores." +  e.getMessage());
 		}
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Trabajador> getTrabajador(@PathVariable int id) {
-		try {
-			Trabajador trabajador = trabajadorService.buscarTrabajadorId(id);
 
-			return ResponseEntity.ok(trabajador);
-		} catch (Exception e) {
-			return ResponseEntity.status(404).body(null);
-		}
-	}
 
 	@PostMapping
-	public ResponseEntity<Trabajador> nuevoTrabajador(@RequestBody Trabajador trabajador) {
+	public ResponseEntity<?> nuevoTrabajador(@RequestBody Trabajador trabajador) {
 		try {
-			trabajadorService.guardar(trabajador);
+			
+			Trabajador trabajadorNuevo= trabajadorService.guardar(trabajador);
 
-			return ResponseEntity.ok(trabajador);
+			return ResponseEntity.ok(trabajadorNuevo);
 		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear trabajador" +  e.getMessage());
 		}
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Trabajador> actualizarTrabajador(@PathVariable int id, @RequestBody Trabajador trabajador) {
+	@PutMapping()
+	public ResponseEntity<?> updateTrabajador( @RequestBody Trabajador trabajador) {
 		try {
-			trabajador.setId(id);
-			trabajadorService.guardar(trabajador);
-
-			return ResponseEntity.ok(trabajador);
+	
+			return ResponseEntity.ok(trabajadorService.guardar(trabajador));
 		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar trabajador" +  e.getMessage());
 		}
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> eliminarTrabajador(@PathVariable int id) {
+	public ResponseEntity<String > deleteTrabajador(@PathVariable int id) {
 		try {
 			trabajadorService.eliminar(id);
 
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.ok("Trabajador " + id + " eliminado correctamente");
 		} catch (Exception e) {
-			return ResponseEntity.status(404).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar trabajador" +  e.getMessage());
 		}
 	}
-
-	@PostMapping("/{trabajadorId}/asignaturas/{asignaturaId}")
-	public ResponseEntity<Trabajador> agregarAsignatura(@PathVariable int trabajadorId,
-			@PathVariable int asignaturaId) {
-		try {
-			Trabajador trabajador = trabajadorService.agregarAsignatura(trabajadorId, asignaturaId);
-
-			return ResponseEntity.ok(trabajador);
-		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
-		}
-	}
-
-	@DeleteMapping("/{trabajadorId}/asignaturas/{asignaturaId}")
-	public ResponseEntity<Trabajador> eliminarAsignatura(@PathVariable int trabajadorId,
-			@PathVariable int asignaturaId) {
-		try {
-			Trabajador trabajador = trabajadorService.eliminarAsignatura(trabajadorId, asignaturaId);
-
-			return ResponseEntity.ok(trabajador);
-		} catch (Exception e) {
-			return ResponseEntity.status(400).body(null);
-		}
-	}
-
+	
+	
+	// Asgnaturas 
+	
 	@GetMapping("/{trabajadorId}/asignaturas")
-	public ResponseEntity<List<Asignatura>> consultarAsignaturas(@PathVariable int trabajadorId) {
+	public ResponseEntity<?> consultarAsignaturas(@PathVariable int trabajadorId) {
 		try {
 			List<Asignatura> asignaturas = trabajadorService.consultarAsignaturas(trabajadorId);
 
 			return ResponseEntity.ok(asignaturas);
 		} catch (Exception e) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener asignaturas. " + e.getMessage());
 		}
 	}
+
+	@PostMapping("/asignaturas")
+	public ResponseEntity<?> agregarAsignatura(@RequestBody Map <String, Integer> mapaTrabAsig) {
+		try {
+			int trabajador_id = mapaTrabAsig.get("trabajador_id");
+			int asignatura_id = mapaTrabAsig.get("asignatura_id");
+			
+			Trabajador trabajador = trabajadorService.agregarAsignatura(trabajador_id, asignatura_id);
+
+			return ResponseEntity.ok(trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al añadir asignaturas. " + e.getMessage());
+		}
+	}
+
+	@DeleteMapping("/asignaturas")
+	public ResponseEntity<?> eliminarAsignatura(@RequestBody Map <String, Integer> mapaTrabAsig) {
+		try {
+			
+			int trabajador_id = mapaTrabAsig.get("trabajador_id");
+			int asignatura_id = mapaTrabAsig.get("asignatura_id");
+			
+			Trabajador trabajador = trabajadorService.eliminarAsignatura(trabajador_id, asignatura_id);
+
+			return ResponseEntity.ok(trabajador);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar asignaturas. " + e.getMessage());
+		}
+	}
+
+
 }

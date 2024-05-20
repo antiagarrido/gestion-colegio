@@ -54,10 +54,6 @@ public class Asignatura implements Serializable {
 		this.curso = curso;
 	}
 
-	@Override
-	public String toString() {
-		return "" + nombre + " de " + curso + "( id " + id + ")";
-	}
 
 
 
