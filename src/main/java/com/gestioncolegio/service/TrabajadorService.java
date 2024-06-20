@@ -73,7 +73,7 @@ public class TrabajadorService {
 		Trabajador trabajador = buscarTrabajadorId(trabajadorId);
 		Asignatura asignatura = asignaturaService.buscarAsignaturaId(asignaturaId);
 
-		if (!trabajador.getRol().getNombre().equals("profesor")) {
+		if (!trabajador.getRol().getNombre().equalsIgnoreCase("profesor")) {
 			
 			throw new Exception("Este trabajador no es profesor");
 		}

@@ -28,6 +28,10 @@ public class AlumnoController {
 	public ResponseEntity<?> getAlumnos() {
 		try {
 			List<Alumno> alumnos = alumnoService.listarAlumnos();
+			
+			if(alumnos.isEmpty()) {
+				return ResponseEntity.status(404).body("Todavía no tenemos alumnos");
+			}
 
 			return ResponseEntity.ok(alumnos);
 		} catch (Exception e) {
@@ -40,9 +44,13 @@ public class AlumnoController {
 	public ResponseEntity<?> getAlumno(@PathVariable int id) {
 		try {
 			Alumno alumno = alumnoService.buscarAlumnoId(id);
+			
+			if(alumno ==null) {
+				return ResponseEntity.status(404).body("No existe el alumno con id " + id);
+			}else {
 
 			return ResponseEntity.ok(alumno);
-			
+		}
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el alumno." +  e.getMessage());
 		}
@@ -51,9 +59,13 @@ public class AlumnoController {
 	@GetMapping("/nombre/{nombre}")
 	public ResponseEntity<?> getAlumnoPorNombre(@PathVariable String nombre) {
 		try {
+			
 			List<Alumno> alumnos = alumnoService.buscarAlumnoNombre(nombre);
-
-			return ResponseEntity.ok(alumnos);
+			if(alumnos.isEmpty()) {
+				return ResponseEntity.status(404).body("Todavía no tenemos alumnos");
+			} else {
+				
+			return ResponseEntity.ok(alumnos);}
 
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el alumno." +  e.getMessage());
@@ -90,6 +102,7 @@ public class AlumnoController {
 	public ResponseEntity<String> deleteAlumno(@PathVariable int id) {
 
 		try {
+			
 			alumnoService.eliminar(id);
 
 			return ResponseEntity.ok("Alumno " + id + " eliminado correctamente");
