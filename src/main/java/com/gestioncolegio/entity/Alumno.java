@@ -19,6 +19,9 @@ public class Alumno extends Persona {
 	@JoinTable(name = "alumno_asignaturas", joinColumns = @JoinColumn(name = "alumno_id"), inverseJoinColumns = @JoinColumn(name = "asignatura_id"))
 
 	private List<Asignatura> asignaturasMatriculadas = new ArrayList<Asignatura>();
+	
+	@OneToMany(mappedBy = "alumno")
+	private List<Nota> notas =new ArrayList<Nota>();
 
 	public Alumno(int id, String nombre, String apellidos, Date fNacimiento, String email, String direccion,
 			String telefono, String dni) {
@@ -35,6 +38,14 @@ public class Alumno extends Persona {
 
 	public Alumno() {
 		super();
+	}
+	
+	
+	
+	
+	public Alumno(int id) {
+		super(id);
+	
 	}
 
 	public List<Asignatura> getAsignaturasMatriculadas() {

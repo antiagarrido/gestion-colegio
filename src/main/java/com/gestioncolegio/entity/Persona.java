@@ -46,6 +46,11 @@ public abstract class Persona implements Serializable{
 
 
 	
+	public Persona(int id) {
+		super();
+		this.id = id;
+	}
+
 	//Constructor con todos los parámetros menos id
 	public Persona(String dni, String nombre, String apellidos, String email, Date fNacimiento, String direccion,
 			String telefono) {

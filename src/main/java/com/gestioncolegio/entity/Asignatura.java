@@ -27,9 +27,36 @@ public class Asignatura implements Serializable {
 
     @ManyToMany(mappedBy =  "asignaturas")
     private List<Trabajador> profesores = new ArrayList<Trabajador>();
+    
+    @OneToMany(mappedBy = "asignatura")
+	private List<Nota> notas =new ArrayList<Nota>();
 
    
     
+	public Asignatura(int id) {
+	
+		this.id = id;
+	}
+	
+	
+
+	public Asignatura() {
+		super();
+	}
+
+
+
+	public Asignatura(int id, String nombre, String curso, List<Alumno> alumnos, List<Trabajador> profesores) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.curso = curso;
+		this.alumnos = alumnos;
+		this.profesores = profesores;
+	}
+
+
+
 	public int getId() {
 		return id;
 	}

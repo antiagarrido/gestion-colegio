@@ -1,21 +1,30 @@
 package com.gestioncolegio.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "notas")
-@IdClass(NotaId.class)
-public class Nota {
+public class Nota implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "alumno_id", nullable = false, foreignKey = @ForeignKey(name = "fk_nota_alumno"))
+	@EmbeddedId
+	private NotaId id;
+
+	@ManyToOne
+	@JoinColumn(name = "alumno_id", insertable=false, updatable=false, foreignKey = @ForeignKey(name = "fk_nota_alumno"))
 	private Alumno alumno;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "asignatura_id", nullable = false, foreignKey = @ForeignKey(name = "fk_nota_asignatura"))
+	@ManyToOne
+	@JoinColumn(name = "asignatura_id", insertable=false, updatable=false, foreignKey = @ForeignKey(name = "fk_nota_asignatura"))
 	private Asignatura asignatura;
 
-	@Column(nullable = false)
+	
 	private Double nota;
 
 	public Alumno getAlumno() {

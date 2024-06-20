@@ -3,44 +3,48 @@ package com.gestioncolegio.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Embeddable;
+
+
+@Embeddable
 public class NotaId implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer alumno;
-	private Integer asignatura;
-
-	public NotaId(Integer alumno, Integer asignatura) {
+	private int alumno_id;
+	private int asignatura_id;
+	
+	public NotaId(int alumno_id, int asignatura_id) {
 		super();
-		this.alumno = alumno;
-		this.asignatura = asignatura;
+		this.alumno_id = alumno_id;
+		this.asignatura_id = asignatura_id;
 	}
 
 	public NotaId() {
 		super();
 	}
 
-	public Integer getAlumno() {
-		return alumno;
+	public int getAlumno_id() {
+		return alumno_id;
 	}
 
-	public void setAlumno(Integer alumno) {
-		this.alumno = alumno;
+	public void setAlumno_id(int alumno_id) {
+		this.alumno_id = alumno_id;
 	}
 
-	public Integer getAsignatura() {
-		return asignatura;
+	public int getAsignatura_id() {
+		return asignatura_id;
 	}
 
-	public void setAsignatura(Integer asignatura) {
-		this.asignatura = asignatura;
+	public void setAsignatura_id(int asignatura_id) {
+		this.asignatura_id = asignatura_id;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(alumno, asignatura);
+		return Objects.hash(alumno_id, asignatura_id);
 	}
 
 	@Override
@@ -52,7 +56,11 @@ public class NotaId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		NotaId other = (NotaId) obj;
-		return Objects.equals(alumno, other.alumno) && Objects.equals(asignatura, other.asignatura);
+		return alumno_id == other.alumno_id && asignatura_id == other.asignatura_id;
 	}
+	
+	
+	
+
 
 }

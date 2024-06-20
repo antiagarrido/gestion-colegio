@@ -9,11 +9,10 @@ import com.gestioncolegio.entity.NotaId;
 
 public interface NotaRepository extends JpaRepository<Nota, NotaId> {
 
-	List<Nota> findByAlumnoId(Integer alumnoId);
+	List<Nota> findByAlumnoId(Integer alumno_id);
 
-	List<Nota> findByAsignaturaId(Integer asignaturaId);
-	
-	Nota findByNotaId(NotaId notaId);
+	List<Nota> findByAsignaturaId(Integer asignatura_id);
+
 	
 
 	

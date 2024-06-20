@@ -16,14 +16,29 @@ import com.gestioncolegio.service.NotaService;
 public class NotaController {
 	@Autowired
 	private NotaService notaService;
+	
+    @GetMapping
+    public ResponseEntity<?> getAllNotas() {
+    	try {
+    		List<Nota> notas = notaService.getAllNotas();
+    		
+    		return ResponseEntity.ok(notas);
+			
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener las notas " + e.getMessage());
+		}
+        
+    }
+
 
 	@GetMapping("/{alumnoId}/{asignaturaId}")
-	public ResponseEntity<?> getNotaById(@PathVariable Integer alumnoId, @PathVariable Integer asignaturaId) {
+	public ResponseEntity<?> getNotaById(@PathVariable int alumnoId, @PathVariable int asignaturaId) {
 
 		NotaId id = new NotaId(alumnoId, asignaturaId);
 
 		try {
-			Nota nota = notaService.getNotaById(id);
+			Nota nota = notaService.getNotaById(id).orElse(null);
 
 			return ResponseEntity.ok(nota);
 		} catch (Exception e) {
@@ -46,7 +61,7 @@ public class NotaController {
 	}
 
 	@DeleteMapping("/{alumnoId}/{asignaturaId}")
-	public ResponseEntity<?> deleteNota(@PathVariable Integer alumnoId, @PathVariable Integer asignaturaId) {
+	public ResponseEntity<?> deleteNota(@PathVariable int alumnoId, @PathVariable int asignaturaId) {
 		NotaId id = new NotaId(alumnoId, asignaturaId);
 		try {
 			notaService.deleteNota(id);
@@ -60,7 +75,7 @@ public class NotaController {
 
 	// Buscar notas por alumnoId
 	@GetMapping("/alumno/{alumnoId}")
-	public ResponseEntity<?> getNotasByAlumnoId(@PathVariable Integer alumnoId) {
+	public ResponseEntity<?> getNotasByAlumnoId(@PathVariable int alumnoId) {
 		try {
 			List<Nota> notas = notaService.getNotasByAlumnoId(alumnoId);
 			return ResponseEntity.ok(notas);
