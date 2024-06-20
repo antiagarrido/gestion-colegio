@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.gestioncolegio.entity.Asignatura;
 import com.gestioncolegio.service.AsignaturaService;
 
-
 @RestController
 @RequestMapping("/asignaturas")
 public class AsignaturaController {
@@ -28,7 +27,8 @@ public class AsignaturaController {
 			List<Asignatura> asignaturas = asignaturaService.listarAsignaturas();
 			return ResponseEntity.ok(asignaturas);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las asignaturas" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener las asignaturas" + e.getMessage());
 		}
 	}
 
@@ -39,7 +39,8 @@ public class AsignaturaController {
 
 			return ResponseEntity.ok(asignatura);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener la asignatura" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener la asignatura" + e.getMessage());
 		}
 	}
 
@@ -50,24 +51,26 @@ public class AsignaturaController {
 
 			return ResponseEntity.ok(asignaturas);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener la asignatura" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al obtener la asignatura" + e.getMessage());
 		}
 	}
 
 	@PostMapping
 	public ResponseEntity<?> createAsignatura(@RequestBody Asignatura asignatura) {
 		try {
-			Asignatura nuevaAsignatura= asignaturaService.guardar(asignatura);
+			Asignatura nuevaAsignatura = asignaturaService.guardar(asignatura);
 
 			return ResponseEntity.ok(nuevaAsignatura);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear la asignatura" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al crear la asignatura" + e.getMessage());
 		}
 	}
 
 	@PutMapping()
-	public ResponseEntity<?> updateAsignatura( @RequestBody Asignatura asignatura) {
+	public ResponseEntity<?> updateAsignatura(@RequestBody Asignatura asignatura) {
 		try {
 
 			Asignatura asignaturaActualizada = asignaturaService.guardar(asignatura);
@@ -75,7 +78,8 @@ public class AsignaturaController {
 			return ResponseEntity.ok(asignaturaActualizada);
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la asignatura" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al actualizar la asignatura" + e.getMessage());
 		}
 	}
 
@@ -86,7 +90,8 @@ public class AsignaturaController {
 			return ResponseEntity.ok(" Asignatura " + id + " eliminada correctamente");
 
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar la asignatura" +  e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al eliminar la asignatura" + e.getMessage());
 		}
 	}
 
