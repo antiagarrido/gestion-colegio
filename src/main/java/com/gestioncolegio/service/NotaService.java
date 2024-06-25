@@ -25,21 +25,23 @@ public class NotaService {
 	}
 
 	public Nota saveNota(Nota nota) {
+	
 		return notaRepository.save(nota);
 	}
 
 	public void deleteNota(NotaId id) {
 		notaRepository.deleteById(id);
 	}
-
+	
 	// Buscar notas por alumnoId
-	public List<Nota> getNotasByAlumnoId(int alumnoId) {
-		return notaRepository.findByAlumnoId(alumnoId);
-	}
+		public List<Nota> getNotasByAlumnoId(int alumnoId) {
+			return notaRepository.findByAlumnoId(alumnoId);
+		}
 
-	// Buscar notas por asignaturaId
-	public List<Nota> getNotasByAsignaturaId(int asignaturaId) {
-		return notaRepository.findByAsignaturaId(asignaturaId);
-	}
+		// Buscar notas por asignaturaId
+		public List<Nota> getNotasByAsignaturaId(int asignaturaId) {
+			return notaRepository.findByAsignaturaId(asignaturaId);
+		}
+
 
 }

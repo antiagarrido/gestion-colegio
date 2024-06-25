@@ -21,9 +21,6 @@ public class TrabajadorService {
 	private RolService rolService;
 	
 
-	
-	
-
 	public List<Trabajador> listarTrabajadores() {
 		return trabajadorRepository.findAll();
 	}

@@ -5,15 +5,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class NotaId implements Serializable {
+public class AlumnoAsignaturaId implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int alumno_id;
     private int asignatura_id;
 
-    public NotaId() {}
+    public AlumnoAsignaturaId() {}
 
-    public NotaId(int alumno_id, int asignatura_id) {
+    public AlumnoAsignaturaId(int alumno_id, int asignatura_id) {
         this.alumno_id = alumno_id;
         this.asignatura_id = asignatura_id;
     }
@@ -38,8 +38,8 @@ public class NotaId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NotaId notaId = (NotaId) o;
-        return alumno_id == notaId.alumno_id && asignatura_id == notaId.asignatura_id;
+        AlumnoAsignaturaId that = (AlumnoAsignaturaId) o;
+        return alumno_id == that.alumno_id && asignatura_id == that.asignatura_id;
     }
 
     @Override
@@ -47,3 +47,4 @@ public class NotaId implements Serializable {
         return Objects.hash(alumno_id, asignatura_id);
     }
 }
+

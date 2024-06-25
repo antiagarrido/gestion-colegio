@@ -20,8 +20,6 @@ public class Alumno extends Persona {
 
 	private List<Asignatura> asignaturasMatriculadas = new ArrayList<Asignatura>();
 	
-	@OneToMany(mappedBy = "alumno")
-	private List<Nota> notas =new ArrayList<Nota>();
 
 	public Alumno(int id, String nombre, String apellidos, Date fNacimiento, String email, String direccion,
 			String telefono, String dni) {

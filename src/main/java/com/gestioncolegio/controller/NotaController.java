@@ -49,6 +49,7 @@ public class NotaController {
 
 	@PostMapping
 	public ResponseEntity<?> saveNota(@RequestBody Nota nota) {
+		
 		try {
 			Nota nuevaNota = notaService.saveNota(nota);
 
@@ -59,12 +60,24 @@ public class NotaController {
 		}
 
 	}
-
-	@DeleteMapping("/{alumnoId}/{asignaturaId}")
-	public ResponseEntity<?> deleteNota(@PathVariable int alumnoId, @PathVariable int asignaturaId) {
-		NotaId id = new NotaId(alumnoId, asignaturaId);
+	@PutMapping
+	public ResponseEntity<?> updateNota(@RequestBody Nota nota) {
+	
 		try {
-			notaService.deleteNota(id);
+			Nota notaActualizada = notaService.saveNota(nota);
+
+			return ResponseEntity.ok(notaActualizada);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al crear la nota" + e.getMessage());
+		}
+
+	}
+
+	@DeleteMapping
+	public ResponseEntity<?> deleteNota(@RequestBody NotaId notaId) {
+			try {
+			notaService.deleteNota(notaId);
 			return ResponseEntity.ok(" Nota eliminada correctamente");
 
 		} catch (Exception e) {

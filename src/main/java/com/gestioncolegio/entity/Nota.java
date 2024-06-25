@@ -1,54 +1,46 @@
 package com.gestioncolegio.entity;
 
-import java.io.Serializable;
-
 import jakarta.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "notas")
-public class Nota implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Nota implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private NotaId id;
+    @EmbeddedId
+    private NotaId id;
 
-	@ManyToOne
-	@JoinColumn(name = "alumno_id", insertable=false, updatable=false, foreignKey = @ForeignKey(name = "fk_nota_alumno"))
-	private Alumno alumno;
+    @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "alumno_id", referencedColumnName = "alumno_id", insertable = false, updatable = false),
+        @JoinColumn(name = "asignatura_id", referencedColumnName = "asignatura_id", insertable = false, updatable = false)
+    })
+    private AlumnoAsignatura alumnoAsignatura;
 
-	@ManyToOne
-	@JoinColumn(name = "asignatura_id", insertable=false, updatable=false, foreignKey = @ForeignKey(name = "fk_nota_asignatura"))
-	private Asignatura asignatura;
+    private Double nota;
 
-	
-	private Double nota;
+    public NotaId getId() {
+        return id;
+    }
 
-	public Alumno getAlumno() {
-		return alumno;
-	}
+    public void setId(NotaId id) {
+        this.id = id;
+    }
 
-	public void setAlumno(Alumno alumno) {
-		this.alumno = alumno;
-	}
+    public AlumnoAsignatura getAlumnoAsignatura() {
+        return alumnoAsignatura;
+    }
 
-	public Asignatura getAsignatura() {
-		return asignatura;
-	}
+    public void setAlumnoAsignatura(AlumnoAsignatura alumnoAsignatura) {
+        this.alumnoAsignatura = alumnoAsignatura;
+    }
 
-	public void setAsignatura(Asignatura asignatura) {
-		this.asignatura = asignatura;
-	}
+    public Double getNota() {
+        return nota;
+    }
 
-	public Double getNota() {
-		return nota;
-	}
-
-	public void setNota(Double nota) {
-		this.nota = nota;
-	}
-
+    public void setNota(Double nota) {
+        this.nota = nota;
+    }
 }
